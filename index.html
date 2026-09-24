@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>SESIverso — Painel Interativo — SESI Divinópolis 2026</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sesi: {
+              blue: '#002F87',
+              navy: '#091F5B',
+              green: '#43B02A',
+              leaf: '#16A34A',
+              lightGreen: '#EAF7EB',
+              sky: '#0EA5E9',
+              sun: '#F59E0B',
+              coral: '#F97316'
+            }
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            fun: ['Fredoka', 'cursive'],
+            brand: ['Nunito', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .blueprint-grid {
+      background-color: #f6faf5;
+      background-image: 
+        radial-gradient(#d1e7dd 1.2px, transparent 1.2px),
+        linear-gradient(to right, rgba(209, 231, 221, 0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(209, 231, 221, 0.4) 1px, transparent 1px);
+      background-size: 24px 24px, 48px 48px, 48px 48px;
+    }
+
+    .interactive-zone {
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .interactive-zone:hover {
+      filter: brightness(1.08) drop-shadow(0 8px 16px rgba(22, 163, 74, 0.25));
+      transform: translateY(-2px);
+    }
+
+    .interactive-booth {
+      cursor: pointer;
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+    .interactive-booth:hover {
+      transform: scale(1.03);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.18));
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #eef7ee; }
+    ::-webkit-scrollbar-thumb { background: #a3d9a5; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #72c575; }
+  </style>
+</head>
+
+<body class="bg-emerald-50/40 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- CABEÇALHO COM A LOGO NORMAL OFICIAL DO SESI -->
+  <header class="bg-[#002F87] text-white shadow-md sticky top-0 z-50 border-b-4 border-[#43B02A]">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Logo Escola SESI Padrão / Normal -->
+      <div class="flex items-center gap-4">
+        <div class="bg-white px-3.5 py-1.5 rounded-xl shadow-sm flex items-center justify-center">
+          <svg viewBox="0 0 160 55" class="h-10 w-auto" xmlns="http://www.w3.org/2000/svg">
+            <!-- "Escola" manuscrita/itálica elegante -->
+            <text x="5" y="19" font-family="'Segoe UI', 'Trebuchet MS', Arial, sans-serif" font-weight="900" font-style="italic" font-size="19" fill="#002F87" letter-spacing="-0.5">Escola</text>
+            <!-- S -->
+            <text x="5" y="50" font-family="'Segoe UI', Arial, sans-serif" font-weight="900" font-style="italic" font-size="34" fill="#002F87">S</text>
+            <!-- E -->
+            <text x="31" y="50" font-family="'Segoe UI', Arial, sans-serif" font-weight="900" font-style="italic" font-size="34" fill="#002F87">E</text>
+            <!-- S -->
+            <text x="57" y="50" font-family="'Segoe UI', Arial, sans-serif" font-weight="900" font-style="italic" font-size="34" fill="#002F87">S</text>
+            <!-- I corpo azul -->
+            <polygon points="84,27 96,27 90,50 78,50" fill="#002F87" />
+            <!-- I topo verde (corte oficial) -->
+            <polygon points="98,24 86,24 88,18 100,18" fill="#43B02A" />
+          </svg>
+        </div>
+
+        <div class="h-8 w-px bg-white/25 hidden sm:block"></div>
+
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-brand font-black text-2xl tracking-wide leading-none text-white drop-shadow-sm">
+              SESI<span class="text-[#43B02A]">verso</span>
+            </span>
+            <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full bg-white/15 text-emerald-200 border border-white/20">
+              2026
+            </span>
+          </div>
+          <span class="text-[11px] font-medium text-blue-100 flex items-center gap-1.5 mt-0.5">
+            <span>Escola Cel. Jovelino Rabelo</span>
+            <span class="text-white/40">•</span>
+            <span class="text-emerald-300 font-bold">Divinópolis</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Botão Voltar à Visão Geral -->
+      <button onclick="setView('master')" id="btn-voltar-master" class="text-xs font-bold px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition flex items-center gap-2 border border-white/20 shadow-sm">
+        <i class="ph-bold ph-compass text-yellow-300 text-sm"></i>
+        <span>Visão Geral da Escola</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- BARRA DE NAVEGAÇÃO ENTRE AMBIENTES -->
+  <nav class="bg-white/95 backdrop-blur border-b border-emerald-100 shadow-sm px-4 py-2.5 sticky top-[61px] z-40">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 overflow-x-auto pb-1 text-xs">
+      <button onclick="setView('master')" class="nav-tab px-3.5 py-2 rounded-xl font-bold transition flex items-center gap-1.5 bg-emerald-700 text-white shadow-sm" data-tab="master">
+        <i class="ph-bold ph-map-trifold"></i> Planta Geral
+      </button>
+      <button onclick="setView('ginasio')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-orange-50 hover:text-orange-700 border border-slate-200" data-tab="ginasio">
+        <span class="w-2.5 h-2.5 rounded-full bg-sesi-coral"></span> Ginásio
+      </button>
+      <button onclick="setView('bloco-b')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200" data-tab="bloco-b">
+        <span class="w-2.5 h-2.5 rounded-full bg-sesi-green"></span> Bloco B
+      </button>
+      <button onclick="setView('infantil')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-sky-50 hover:text-sky-700 border border-slate-200" data-tab="infantil">
+        <span class="w-2.5 h-2.5 rounded-full bg-sesi-sky"></span> Ed. Infantil (Bloco A)
+      </button>
+      <button onclick="setView('teatro')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-purple-50 hover:text-purple-700 border border-slate-200" data-tab="teatro">
+        <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span> Teatro
+      </button>
+      <button onclick="setView('maker')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-700 border border-slate-200" data-tab="maker">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Espaço Maker
+      </button>
+      <button onclick="setView('patio')" class="nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200" data-tab="patio">
+        <span class="w-2.5 h-2.5 rounded-full bg-slate-500"></span> Pátio
+      </button>
+    </div>
+  </nav>
+
+  <!-- PAINEL PRINCIPAL INTERATIVO -->
+  <main class="flex-1 flex flex-col lg:flex-row relative overflow-hidden">
+
+    <!-- ÁREA VISUAL DO MAPA E DETALHAMENTOS -->
+    <div class="flex-1 relative blueprint-grid flex items-center justify-center p-3 sm:p-5 min-h-[500px] lg:min-h-[640px] overflow-hidden select-none">
+      
+      <!-- 1. PLANTA MESTRA GERAL DA ESCOLA -->
+      <div id="view-master-container" class="w-full h-full flex items-center justify-center">
+        <svg id="svg-master" viewBox="0 0 1100 800" class="w-full h-full max-h-[82vh]" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <filter id="softShadow" x="-5%" y="-5%" width="115%" height="115%">
+              <feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#166534" flood-opacity="0.15" />
+            </filter>
+            <pattern id="roofPattern" width="10" height="20" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="10" y2="0" stroke="#94a3b8" stroke-width="1.2" />
+            </pattern>
+          </defs>
+
+          <!-- Terreno da Escola -->
+          <rect x="40" y="30" width="1020" height="740" fill="#EBF5E9" stroke="#86EFAC" stroke-width="2.5" rx="16" />
+
+          <!-- Ruas e Acessos -->
+          <text x="540" y="790" font-size="11" font-weight="800" fill="#64748B" text-anchor="middle" letter-spacing="2">RUA PETRÓPOLIS (ACESSO PRINCIPAL)</text>
+          <text x="22" y="420" font-size="11" font-weight="800" fill="#64748B" text-anchor="middle" transform="rotate(-90 22 420)" letter-spacing="2">RUA PRATÁPOLIS</text>
+          <text x="1080" y="420" font-size="11" font-weight="800" fill="#64748B" text-anchor="middle" transform="rotate(90 1080 420)" letter-spacing="2">RUA ANICETO GOMES AZEVEDO</text>
+
+          <!-- Cobertura Superior Esquerda -->
+          <circle cx="170" cy="130" r="60" fill="#ffffff" stroke="#94A3B8" stroke-width="2" />
+          <text x="170" y="134" font-size="10" font-weight="800" fill="#64748B" text-anchor="middle">ÁREA COBERTA</text>
+
+          <!-- GINÁSIO (ANOS FINAIS) -->
+          <g id="master-zone-ginasio" class="interactive-zone" onclick="setView('ginasio'); updateFocus('Ginásio', 'Anos Finais (6º ao 9º Ano A)')">
+            <rect x="680" y="110" width="300" height="520" rx="10" fill="#FFFFFF" stroke="#F97316" stroke-width="2.5" filter="url(#softShadow)" />
+            <rect x="692" y="125" width="276" height="490" fill="url(#roofPattern)" opacity="0.35" />
+            
+            <rect x="735" y="440" width="190" height="72" rx="10" fill="#FFF7ED" stroke="#F97316" stroke-width="2" />
+            <text x="830" y="470" font-family="'Fredoka', cursive" font-size="20" font-weight="700" fill="#C2410C" text-anchor="middle">GINÁSIO</text>
+            <text x="830" y="492" font-size="11" font-weight="700" fill="#EA580C" text-anchor="middle">Anos Finais (6º ao 9º Ano A)</text>
+            <rect x="750" y="525" width="160" height="26" rx="13" fill="#F97316" />
+            <text x="830" y="542" font-size="11" font-weight="800" fill="#ffffff" text-anchor="middle">Toque para explorar →</text>
+          </g>
+
+          <!-- QUADRA COBERTA -->
+          <polygon points="410,105 655,180 595,420 350,340" fill="#FFFFFF" stroke="#64748B" stroke-width="2" filter="url(#softShadow)" />
+          <polygon points="418,115 645,185 590,410 360,335" fill="url(#roofPattern)" opacity="0.3" />
+          <text x="500" y="270" font-size="12" font-weight="800" fill="#475569" text-anchor="middle" transform="rotate(17 500 270)">QUADRA MULTIUSO</text>
+
+          <!-- BLOCO B (TÉRREO E SUBSOLO) -->
+          <g id="master-zone-bloco-b" class="interactive-zone" onclick="setView('bloco-b'); updateFocus('Bloco B', 'Salas 101, 103, 104, 105, 107 e Subsolo')">
+            <polygon points="330,420 595,510 550,680 275,595" fill="#1E293B" stroke="#0F172A" stroke-width="2.5" filter="url(#softShadow)" />
+            <polygon points="340,435 585,520 545,670 288,588" fill="#334155" />
+            
+            <g transform="rotate(18 435 550)">
+              <rect x="305" y="520" width="270" height="58" rx="10" fill="#FFFFFF" stroke="#16A34A" stroke-width="3" />
+              <text x="440" y="548" font-family="'Fredoka', cursive" font-size="22" font-weight="700" fill="#15803D" text-anchor="middle">BLOCO B</text>
+              <text x="440" y="566" font-size="10" font-weight="800" fill="#166534" text-anchor="middle">Salas 101 a 107 + Subsolo (S03 e S05) →</text>
+            </g>
+            <rect x="548" y="555" width="34" height="24" rx="6" fill="#F97316" stroke="#FFFFFF" stroke-width="2" />
+            <text x="565" y="571" font-size="10" font-weight="900" fill="#FFFFFF" text-anchor="middle">104</text>
+          </g>
+
+          <polygon points="280,105 390,165 240,570 145,515" fill="#CBD5E1" stroke="#94A3B8" stroke-width="2" />
+
+          <!-- TEATRO -->
+          <g id="master-zone-teatro" class="interactive-zone" onclick="setView('teatro'); updateFocus('Teatro', '1ª Serie A (Ensino Médio)')">
+            <polygon points="215,445 295,475 260,560 185,530" fill="#FAF5FF" stroke="#A855F7" stroke-width="2.5" />
+            <text x="240" y="510" font-family="'Fredoka', cursive" font-size="15" font-weight="700" fill="#7E22CE" text-anchor="middle" transform="rotate(-70 240 510)">TEATRO</text>
+          </g>
+
+          <!-- ESPAÇO MAKER -->
+          <g id="master-zone-maker" class="interactive-zone" onclick="setView('maker'); updateFocus('Espaço Maker', 'Eureka e Oficina Robótica')">
+            <polygon points="245,360 330,395 295,475 215,445" fill="#FEFCE8" stroke="#EAB308" stroke-width="2.5" />
+            <text x="270" y="425" font-family="'Fredoka', cursive" font-size="15" font-weight="700" fill="#A16207" text-anchor="middle" transform="rotate(-70 270 425)">MAKER</text>
+          </g>
+
+          <!-- EDUCAÇÃO INFANTIL (BLOCO A) -->
+          <g id="master-zone-infantil" class="interactive-zone" onclick="setView('infantil'); updateFocus('Educação Infantil', 'Bloco A e Corredor Infantil')">
+            <polygon points="280,110 395,165 330,340 220,285" fill="#FFFFFF" stroke="#0284C7" stroke-width="3" filter="url(#softShadow)" />
+            <rect x="235" y="165" width="130" height="95" rx="10" fill="#F0F9FF" stroke="#38BDF8" stroke-width="2" transform="rotate(24 300 210)" />
+            <text x="300" y="202" font-family="'Fredoka', cursive" font-size="15" font-weight="700" fill="#0369A1" text-anchor="middle" transform="rotate(24 300 202)">EDUCAÇÃO</text>
+            <text x="300" y="222" font-family="'Fredoka', cursive" font-size="15" font-weight="700" fill="#0369A1" text-anchor="middle" transform="rotate(24 300 222)">INFANTIL</text>
+            <text x="300" y="242" font-size="9.5" font-weight="800" fill="#0284C7" text-anchor="middle" transform="rotate(24 300 242)">Bloco A &amp; Corredor →</text>
+          </g>
+
+          <!-- PÁTIO CENTRAL -->
+          <g id="master-zone-patio" class="interactive-zone" onclick="setView('patio'); updateFocus('Pátio Central', '3ª série (Ensino Médio)')">
+            <circle cx="530" cy="440" r="46" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2" stroke-dasharray="4,4" />
+            <text x="530" y="435" font-family="'Fredoka', cursive" font-size="14" font-weight="700" fill="#475569" text-anchor="middle">PÁTIO</text>
+            <text x="530" y="452" font-size="10" font-weight="700" fill="#64748B" text-anchor="middle">3ª série (Médio)</text>
+          </g>
+
+          <!-- Rosa dos Ventos -->
+          <g transform="translate(1015, 100)">
+            <circle cx="0" cy="0" r="22" fill="#FFFFFF" stroke="#86EFAC" stroke-width="2" />
+            <polygon points="0,-18 5,-4 0,0 -5,-4" fill="#002F87" />
+            <polygon points="0,18 5,4 0,0 -5,4" fill="#86EFAC" />
+            <text x="0" y="-7" font-size="9" font-weight="900" fill="#002F87" text-anchor="middle">N</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 2. DETALHAMENTO DO GINÁSIO -->
+      <div id="view-ginasio-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-orange-200 p-4 sm:p-6 flex flex-col gap-3">
+          <div class="flex items-center justify-between border-b border-orange-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-800">
+                Anos Finais • Ginásio
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-slate-800 mt-0.5">Ginásio Poliesportivo</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <!-- Quadra com Estandes Exatos e Alinhados -->
+          <div class="w-full overflow-hidden bg-slate-100 rounded-2xl p-3 border border-slate-200 shadow-inner">
+            <svg viewBox="0 0 920 460" class="w-full h-auto max-h-[52vh]">
+              <!-- Arquibancada Superior -->
+              <rect x="180" y="20" width="580" height="38" fill="#94A3B8" rx="4" />
+              <line x1="180" y1="32" x2="760" y2="32" stroke="#CBD5E1" />
+              <line x1="180" y1="46" x2="760" y2="46" stroke="#CBD5E1" />
+
+              <!-- Piso Esportivo Azul (Quadra Central) -->
+              <rect x="230" y="75" width="480" height="290" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="2" />
+              <line x1="470" y1="75" x2="470" y2="365" stroke="#FFFFFF" stroke-width="2" />
+              <circle cx="470" cy="220" r="45" stroke="#FFFFFF" stroke-width="2" fill="none" />
+              <circle cx="470" cy="220" r="14" fill="#FFFFFF" stroke="#2563EB" stroke-width="2" />
+
+              <!-- Baias e Divisórias Laterais -->
+              <rect x="40" y="60" width="100" height="320" rx="6" fill="#64748B" />
+              <rect x="50" y="75" width="80" height="85" fill="#3B82F6" rx="4" />
+              <rect x="50" y="180" width="80" height="85" fill="#3B82F6" rx="4" />
+              <rect x="50" y="285" width="80" height="85" fill="#3B82F6" rx="4" />
+              <rect x="155" y="60" width="16" height="320" fill="#78350F" rx="2" />
+
+              <!-- ESTANDES FILEIRA SUPERIOR -->
+              <g class="interactive-booth" onclick="updateFocus('6º Ano A', 'Ginásio')">
+                <rect x="245" y="85" width="95" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="292" y="114" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">6º Ano A</text>
+                <text x="292" y="130" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <g class="interactive-booth" onclick="updateFocus('6º Ano B', 'Ginásio')">
+                <rect x="355" y="85" width="95" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="402" y="114" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">6º Ano B</text>
+                <text x="402" y="130" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <g class="interactive-booth" onclick="updateFocus('7º Ano A', 'Ginásio')">
+                <rect x="480" y="85" width="105" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="532" y="114" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">7º Ano A</text>
+                <text x="532" y="130" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <g class="interactive-booth" onclick="updateFocus('7º Ano B', 'Ginásio')">
+                <rect x="600" y="85" width="95" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="647" y="114" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">7º Ano B</text>
+                <text x="647" y="130" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <!-- ESTANDES FILEIRA INFERIOR -->
+              <g class="interactive-booth" onclick="updateFocus('8º Ano A', 'Ginásio')">
+                <rect x="245" y="295" width="115" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="302" y="324" font-size="13" font-weight="900" fill="#FFFFFF" text-anchor="middle">8º Ano A</text>
+                <text x="302" y="340" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <g class="interactive-booth" onclick="updateFocus('8º Ano B', 'Ginásio')">
+                <rect x="385" y="295" width="135" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="452" y="324" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">8º Ano B</text>
+                <text x="452" y="340" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <g class="interactive-booth" onclick="updateFocus('9º Ano A', 'Ginásio')">
+                <rect x="545" y="295" width="150" height="58" rx="8" fill="#F97316" stroke="#C2410C" stroke-width="1.5" />
+                <text x="620" y="324" font-size="14" font-weight="900" fill="#FFFFFF" text-anchor="middle">9º Ano A</text>
+                <text x="620" y="340" font-size="10" font-weight="700" fill="#FFEDD5" text-anchor="middle">Ginásio</text>
+              </g>
+
+              <!-- Arquibancada Inferior -->
+              <rect x="180" y="390" width="580" height="38" fill="#94A3B8" rx="4" />
+              <line x1="180" y1="402" x2="760" y2="402" stroke="#CBD5E1" />
+              <line x1="180" y1="416" x2="760" y2="416" stroke="#CBD5E1" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. DETALHAMENTO DO BLOCO B -->
+      <div id="view-bloco-b-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-emerald-200 p-4 sm:p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-emerald-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                Térreo e Subsolo
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-slate-800 mt-0.5">Bloco B</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <!-- Salas do Térreo -->
+          <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+            <i class="ph-bold ph-door text-emerald-600"></i> Pavimento Térreo
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <!-- Bloco B - Sala 101 -->
+            <div class="interactive-booth p-3.5 rounded-2xl border border-emerald-100 bg-emerald-50/50 flex flex-col justify-between" onclick="updateFocus('3º A e B', 'Bloco B - Sala 101')">
+              <span class="font-bold text-slate-800 text-xs">Bloco B - Sala 101</span>
+              <div class="my-3">
+                <div class="w-full py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center shadow-sm">
+                  3º A e B
+                </div>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-semibold">Anos Iniciais</span>
+            </div>
+
+            <!-- Bloco B - Sala 103 -->
+            <div class="interactive-booth p-3.5 rounded-2xl border border-emerald-100 bg-emerald-50/50 flex flex-col justify-between" onclick="updateFocus('4º A, B e C', 'Bloco B - Sala 103')">
+              <span class="font-bold text-slate-800 text-xs">Bloco B - Sala 103</span>
+              <div class="my-3">
+                <div class="w-full py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center shadow-sm">
+                  4º A, B e C
+                </div>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-semibold">Anos Iniciais</span>
+            </div>
+
+            <!-- Bloco B - Sala 104 -->
+            <div class="interactive-booth p-3.5 rounded-2xl border border-orange-200 bg-orange-50/60 flex flex-col justify-between" onclick="updateFocus('9º B', 'Bloco B - Sala 104')">
+              <span class="font-bold text-slate-800 text-xs">Bloco B - Sala 104</span>
+              <div class="my-3">
+                <div class="w-full py-2 bg-orange-600 text-white rounded-xl text-xs font-bold text-center shadow-sm">
+                  9º B
+                </div>
+              </div>
+              <span class="text-[10px] text-orange-700 font-semibold">Anos Finais</span>
+            </div>
+
+            <!-- Bloco B - Sala 105 -->
+            <div class="interactive-booth p-3.5 rounded-2xl border border-emerald-100 bg-emerald-50/50 flex flex-col justify-between" onclick="updateFocus('5º A, B e C', 'Bloco B - Sala 105')">
+              <span class="font-bold text-slate-800 text-xs">Bloco B - Sala 105</span>
+              <div class="my-3">
+                <div class="w-full py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold text-center shadow-sm">
+                  5º A, B e C
+                </div>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-semibold">Anos Iniciais</span>
+            </div>
+
+            <!-- Bloco B - Sala 107 -->
+            <div class="interactive-booth p-3.5 rounded-2xl border border-emerald-100 bg-emerald-50/50 flex flex-col justify-between" onclick="updateFocus('1º A e B + 2º A e B', 'Bloco B - Sala 107')">
+              <span class="font-bold text-slate-800 text-xs">Bloco B - Sala 107</span>
+              <div class="my-2 space-y-1.5">
+                <div class="w-full py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold text-center shadow-sm">
+                  1º A e B
+                </div>
+                <div class="w-full py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold text-center shadow-sm">
+                  2º A e B
+                </div>
+              </div>
+              <span class="text-[10px] text-emerald-700 font-semibold">Anos Iniciais</span>
+            </div>
+          </div>
+
+          <!-- Pavimento Subsolo -->
+          <h4 class="text-xs font-bold uppercase tracking-wider text-purple-800 mt-3 flex items-center gap-1.5">
+            <i class="ph-bold ph-stairs text-purple-600"></i> Pavimento Subsolo (Ensino Médio)
+          </h4>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <div class="interactive-booth p-5 rounded-2xl border border-purple-200 bg-purple-50/70 hover:bg-purple-100/60 shadow-sm flex items-center justify-between gap-4 transition" onclick="updateFocus('2ª Série EM', 'Bloco B Subsolo - Sala S03')">
+              <div class="space-y-1">
+                <span class="font-bold text-slate-800 text-sm block">Bloco B Subsolo — Sala S03</span>
+                <span class="text-xs text-purple-700 font-semibold block">Ensino Médio</span>
+              </div>
+              <div class="px-5 py-2.5 bg-purple-600 text-white font-bold rounded-xl text-sm shadow-md whitespace-nowrap">
+                2ª Série EM
+              </div>
+            </div>
+
+            <div class="interactive-booth p-5 rounded-2xl border border-purple-200 bg-purple-50/70 hover:bg-purple-100/60 shadow-sm flex items-center justify-between gap-4 transition" onclick="updateFocus('1ª Série B', 'Bloco B Subsolo - Sala S05')">
+              <div class="space-y-1">
+                <span class="font-bold text-slate-800 text-sm block">Bloco B Subsolo — Sala S05</span>
+                <span class="text-xs text-purple-700 font-semibold block">Ensino Médio</span>
+              </div>
+              <div class="px-5 py-2.5 bg-purple-600 text-white font-bold rounded-xl text-sm shadow-md whitespace-nowrap">
+                1ª Série B
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. DETALHAMENTO DA EDUCAÇÃO INFANTIL -->
+      <div id="view-infantil-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-sky-200 p-4 sm:p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-sky-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800">
+                Educação Infantil
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-slate-800 mt-0.5">Educação Infantil — Bloco A</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-2xl bg-sky-50/50 border border-sky-100">
+              <h4 class="font-bold text-sky-900 text-xs uppercase mb-3 flex items-center gap-1.5">
+                <i class="ph-bold ph-baby text-sky-600"></i> Salas do Bloco A
+              </h4>
+              <div class="space-y-2">
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-sky-100 flex items-center justify-between" onclick="updateFocus('Maternal II', 'Sala Mat. II - Bloco A')">
+                  <span class="font-bold text-slate-800 text-xs">Maternal II</span>
+                  <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
+                    Sala Mat. II - Bloco A
+                  </span>
+                </div>
+
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-sky-100 flex items-center justify-between" onclick="updateFocus('Maternal III', 'Vivência - Bloco A')">
+                  <span class="font-bold text-slate-800 text-xs">Maternal III</span>
+                  <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
+                    Vivência - Bloco A
+                  </span>
+                </div>
+
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-sky-100 flex items-center justify-between" onclick="updateFocus('1º Período', 'Sala de Artes - Bloco A')">
+                  <span class="font-bold text-slate-800 text-xs">1º Período</span>
+                  <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
+                    Sala de Artes - Bloco A
+                  </span>
+                </div>
+
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-sky-100 flex items-center justify-between" onclick="updateFocus('2º Período', 'Sala Mat. III - Bloco A')">
+                  <span class="font-bold text-slate-800 text-xs">2º Período</span>
+                  <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-100">
+                    Sala Mat. III - Bloco A
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-emerald-50/40 border border-emerald-100">
+              <h4 class="font-bold text-emerald-900 text-xs uppercase mb-3 flex items-center gap-1.5">
+                <i class="ph-bold ph-path text-emerald-600"></i> Corredor da Ed. Infantil
+              </h4>
+              <div class="space-y-2">
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-emerald-100 flex items-center justify-between" onclick="updateFocus('Inglês', 'Corredor da Ed. Infantil')">
+                  <span class="font-bold text-slate-800 text-xs">Inglês</span>
+                  <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                    Corredor da Ed. Infantil
+                  </span>
+                </div>
+
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-emerald-100 flex items-center justify-between" onclick="updateFocus('Musica / Artes', 'Corredor da Ed. Infantil')">
+                  <span class="font-bold text-slate-800 text-xs">Musica / Artes</span>
+                  <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                    Corredor da Ed. Infantil
+                  </span>
+                </div>
+
+                <div class="interactive-booth p-3 rounded-xl bg-white border border-emerald-100 flex items-center justify-between" onclick="updateFocus('Ed. Física', 'Corredor da Ed. Infantil')">
+                  <span class="font-bold text-slate-800 text-xs">Ed. Física</span>
+                  <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
+                    Corredor da Ed. Infantil
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. DETALHAMENTO DO TEATRO -->
+      <div id="view-teatro-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-purple-200 p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-purple-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800">
+                Ensino Médio • Espaço Artístico
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-purple-900 mt-0.5">Teatro</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-purple-50/60 border border-purple-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold text-purple-800 uppercase tracking-wider block">Turma Alocada:</span>
+              <h4 class="font-fun font-bold text-3xl text-purple-950 mt-1">1ª Serie A</h4>
+              <p class="text-xs text-purple-700 mt-1">Auditório e Palco de Apresentações Culturais</p>
+            </div>
+            <div class="px-5 py-3 bg-purple-600 text-white font-bold rounded-2xl text-sm shadow-md flex items-center gap-2">
+              <i class="ph-bold ph-sparkle text-yellow-300"></i> Local Oficial: Teatro
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. DETALHAMENTO DO ESPAÇO MAKER -->
+      <div id="view-maker-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-amber-200 p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-amber-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800">
+                Tecnologia &amp; Robótica
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-amber-900 mt-0.5">Espaço Maker</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-amber-50/60 border border-amber-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold text-amber-800 uppercase tracking-wider block">Projeto / Estande:</span>
+              <h4 class="font-fun font-bold text-2xl text-amber-950 mt-1">Eureka e Oficina Robótica</h4>
+              <p class="text-xs text-amber-700 mt-1">Espaço de Prototipagem, Robótica e Inovação</p>
+            </div>
+            <div class="px-5 py-3 bg-amber-600 text-white font-bold rounded-2xl text-sm shadow-md flex items-center gap-2">
+              <i class="ph-bold ph-cpu text-yellow-200"></i> Local Oficial: Espaço Maker
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. DETALHAMENTO DO PÁTIO -->
+      <div id="view-patio-container" class="w-full h-full hidden flex-col items-center justify-center p-2">
+        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-xl border border-slate-200 p-6 flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800">
+                Ensino Médio • Convivência
+              </span>
+              <h3 class="font-fun font-bold text-2xl text-slate-800 mt-0.5">Pátio Central</h3>
+            </div>
+            <button onclick="setView('master')" class="text-xs font-bold text-slate-500 hover:text-emerald-700 px-3 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-left"></i> Voltar à Planta Geral
+            </button>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span class="text-xs font-bold text-slate-600 uppercase tracking-wider block">Turma Alocada:</span>
+              <h4 class="font-fun font-bold text-3xl text-slate-900 mt-1">3ª série</h4>
+              <p class="text-xs text-slate-600 mt-1">Área central do evento e recepção dos formandos</p>
+            </div>
+            <div class="px-5 py-3 bg-purple-600 text-white font-bold rounded-2xl text-sm shadow-md flex items-center gap-2">
+              <i class="ph-bold ph-users-three text-yellow-300"></i> Local Oficial: Pátio
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PAINEL LATERAL COM A ARTE DO SESIVERSO -->
+    <aside class="w-full lg:w-[360px] bg-white border-t lg:border-t-0 lg:border-l border-emerald-100 flex flex-col shadow-xl z-20 overflow-y-auto">
+      
+      <!-- ARTE DO SESIVERSO COM O PLANETA CIDADE SUSTENTÁVEL -->
+      <div class="p-3 bg-gradient-to-b from-sky-50 via-emerald-50/50 to-white border-b border-emerald-100">
+        <div class="rounded-2xl border-2 border-emerald-200/80 bg-white p-2.5 shadow-sm overflow-hidden flex flex-col items-center">
+          
+          <svg viewBox="0 0 320 330" class="w-full max-w-[240px] h-auto drop-shadow-sm select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="artSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E0F2FE" />
+                <stop offset="100%" stop-color="#FFFFFF" />
+              </linearGradient>
+              <linearGradient id="globeGrad1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#22C55E" />
+                <stop offset="100%" stop-color="#15803D" />
+              </linearGradient>
+              <linearGradient id="globeGrad2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4ADE80" />
+                <stop offset="100%" stop-color="#16A34A" />
+              </linearGradient>
+              <filter id="shadowArt" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#064E3B" flood-opacity="0.15"/>
+              </filter>
+            </defs>
+
+            <!-- TÍTULO SESIVERSO COM CORES E FOGUETE -->
+            <g transform="translate(18, 12)">
+              <!-- S -->
+              <text x="5" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#002F87">S</text>
+              <!-- E -->
+              <text x="27" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#0284C7">E</text>
+              <!-- S -->
+              <text x="49" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#002F87">S</text>
+              <!-- I (Amarelo / Sol) -->
+              <text x="71" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#FBBF24">I</text>
+              <!-- V (Azul Céu) -->
+              <text x="91" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#38BDF8">V</text>
+              <!-- E (Rosa / Coral) -->
+              <text x="117" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#F43F5E">E</text>
+              <!-- R (Verde) -->
+              <text x="143" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#22C55E">R</text>
+              <!-- S (Verde Limão) -->
+              <text x="169" y="34" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="34" fill="#84CC16">S</text>
+              <!-- O em formato de órbita com foguete -->
+              <circle cx="212" cy="24" r="15" fill="none" stroke="#6366F1" stroke-width="4" stroke-dasharray="80,10" />
+              <!-- Foguetinho na órbita -->
+              <g transform="translate(222, 10) rotate(-45) scale(0.6)">
+                <polygon points="0,0 8,14 -8,14" fill="#6366F1" />
+                <polygon points="-4,14 0,20 4,14" fill="#F97316" />
+              </g>
+            </g>
+
+            <!-- BALÃO DE AR QUENTE NA LATERAL -->
+            <g transform="translate(262, 75)">
+              <path d="M 12 0 C 22 0 24 16 14 26 L 10 26 C 0 16 2 0 12 0 Z" fill="#84CC16" stroke="#4D7C0F" stroke-width="1" />
+              <path d="M 8 0 C 14 0 16 26 12 26 C 8 26 10 0 8 0 Z" fill="#65A30D" />
+              <rect x="9" y="29" width="6" height="5" fill="#78350F" rx="1" />
+              <line x1="9" y1="26" x2="9" y2="29" stroke="#78350F" stroke-width="0.8" />
+              <line x1="15" y1="26" x2="15" y2="29" stroke="#78350F" stroke-width="0.8" />
+            </g>
+
+            <!-- CAMADAS DO GLOBO VERDE (ARTE PAPER CUT) -->
+            <!-- Camada Base de Folhagens Externa -->
+            <circle cx="160" cy="180" r="105" fill="#DCFCE7" filter="url(#shadowArt)" />
+            <circle cx="160" cy="180" r="95" fill="#BBF7D0" />
+            
+            <!-- Árvores de Fundo -->
+            <circle cx="95" cy="120" r="22" fill="#15803D" />
+            <circle cx="225" cy="120" r="22" fill="#15803D" />
+            <circle cx="75" cy="150" r="26" fill="#16A34A" />
+            <circle cx="245" cy="150" r="26" fill="#16A34A" />
+
+            <!-- Camada de Céu Redondo Central -->
+            <circle cx="160" cy="180" r="80" fill="url(#artSky)" />
+
+            <!-- CIDADE SUSTENTÁVEL (PRÉDIOS BRANCOS MODERNOS) -->
+            <rect x="145" y="115" width="22" height="65" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" rx="1" />
+            <rect x="171" y="125" width="18" height="55" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" rx="1" />
+            <rect x="123" y="130" width="18" height="50" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1" rx="1" />
+            <rect x="103" y="145" width="16" height="35" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" rx="1" />
+            <rect x="193" y="142" width="16" height="38" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1" rx="1" />
+
+            <!-- Janelinhas dos Prédios -->
+            <line x1="150" y1="125" x2="162" y2="125" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="2,2" />
+            <line x1="150" y1="135" x2="162" y2="135" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="2,2" />
+            <line x1="150" y1="145" x2="162" y2="145" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="2,2" />
+            <line x1="150" y1="155" x2="162" y2="155" stroke="#94A3B8" stroke-width="1.5" stroke-dasharray="2,2" />
+
+            <!-- COLINAS E VEGETAÇÃO SOBREPOSTAS (VERDES EM CAMADAS) -->
+            <!-- Colina Média -->
+            <path d="M 80,180 Q 120,150 160,175 Q 200,150 240,180 A 80,80 0 0,1 80,180 Z" fill="url(#globeGrad1)" />
+
+            <!-- Turbinas Eólicas -->
+            <g transform="translate(105, 175) scale(0.65)">
+              <line x1="0" y1="0" x2="0" y2="35" stroke="#FFFFFF" stroke-width="2.5" />
+              <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+              <line x1="0" y1="0" x2="0" y2="-18" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="0" y1="0" x2="15" y2="10" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="0" y1="0" x2="-15" y2="10" stroke="#FFFFFF" stroke-width="1.5" />
+            </g>
+            <g transform="translate(210, 175) scale(0.65)">
+              <line x1="0" y1="0" x2="0" y2="35" stroke="#FFFFFF" stroke-width="2.5" />
+              <circle cx="0" cy="0" r="3" fill="#FFFFFF" />
+              <line x1="0" y1="0" x2="0" y2="-18" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="0" y1="0" x2="15" y2="10" stroke="#FFFFFF" stroke-width="1.5" />
+              <line x1="0" y1="0" x2="-15" y2="10" stroke="#FFFFFF" stroke-width="1.5" />
+            </g>
+
+            <!-- Casinhas Verdes / Brancas no Morro -->
+            <polygon points="120,180 128,172 136,180" fill="#EF4444" />
+            <rect x="122" y="180" width="12" height="10" fill="#FFFFFF" />
+            <polygon points="185,182 193,174 201,182" fill="#3B82F6" />
+            <rect x="187" y="182" width="12" height="10" fill="#FFFFFF" />
+
+            <!-- Colina Frontal Vibrante -->
+            <path d="M 68,200 Q 110,175 160,195 Q 210,175 252,200 A 95,95 0 0,1 68,200 Z" fill="url(#globeGrad2)" />
+
+            <!-- Turbina Eólica Frontal em Destaque -->
+            <g transform="translate(85, 220) scale(0.85)">
+              <line x1="0" y1="0" x2="0" y2="40" stroke="#FFFFFF" stroke-width="3" />
+              <circle cx="0" cy="0" r="3.5" fill="#FFFFFF" />
+              <line x1="0" y1="0" x2="0" y2="-22" stroke="#FFFFFF" stroke-width="2" />
+              <line x1="0" y1="0" x2="19" y2="12" stroke="#FFFFFF" stroke-width="2" />
+              <line x1="0" y1="0" x2="-19" y2="12" stroke="#FFFFFF" stroke-width="2" />
+            </g>
+            <g transform="translate(230, 220) scale(0.85)">
+              <line x1="0" y1="0" x2="0" y2="40" stroke="#FFFFFF" stroke-width="3" />
+              <circle cx="0" cy="0" r="3.5" fill="#FFFFFF" />
+              <line x1="0" y1="0" x2="0" y2="-22" stroke="#FFFFFF" stroke-width="2" />
+              <line x1="0" y1="0" x2="19" y2="12" stroke="#FFFFFF" stroke-width="2" />
+              <line x1="0" y1="0" x2="-19" y2="12" stroke="#FFFFFF" stroke-width="2" />
+            </g>
+
+            <!-- Borboletas Amarelas Voando -->
+            <g transform="translate(100, 210) scale(0.7)">
+              <circle cx="-3" cy="0" r="4" fill="#FBBF24" />
+              <circle cx="3" cy="0" r="4" fill="#FBBF24" />
+            </g>
+            <g transform="translate(215, 215) scale(0.7)">
+              <circle cx="-3" cy="0" r="4" fill="#FBBF24" />
+              <circle cx="3" cy="0" r="4" fill="#FBBF24" />
+            </g>
+
+            <!-- Recorte Estilizado Inferior (Paper Art) -->
+            <path d="M 65,240 Q 80,270 100,250 Q 120,285 145,260 Q 160,288 175,260 Q 200,285 220,250 Q 240,270 255,240 Z" fill="#15803D" opacity="0.3" />
+
+            <!-- FRASE ASSINATURA: QUAL UNIVERSO MAIS TE ATRAI? -->
+            <g transform="translate(160, 310)">
+              <text x="0" y="0" text-anchor="middle" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-weight="900" font-size="15.5">
+                <tspan fill="#EF4444">Qual </tspan>
+                <tspan fill="#16A34A">Universo </tspan>
+                <tspan fill="#0284C7">mais </tspan>
+                <tspan fill="#EAB308">te </tspan>
+                <tspan fill="#0284C7">atrai?</tspan>
+              </text>
+            </g>
+          </svg>
+
+        </div>
+      </div>
+
+      <!-- Guia de Cores dos Níveis de Ensino -->
+      <div class="p-3 border-b border-emerald-50 bg-slate-50/50">
+        <h4 class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+          Legenda dos Níveis
+        </h4>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="flex items-center gap-2 p-1.5 rounded-xl bg-white border border-slate-200">
+            <span class="w-3 h-3 rounded-full bg-sky-500 shrink-0"></span>
+            <span class="font-bold text-slate-700 text-[11px]">Ed. Infantil</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded-xl bg-white border border-slate-200">
+            <span class="w-3 h-3 rounded-full bg-emerald-600 shrink-0"></span>
+            <span class="font-bold text-slate-700 text-[11px]">Anos Iniciais</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded-xl bg-white border border-slate-200">
+            <span class="w-3 h-3 rounded-full bg-orange-500 shrink-0"></span>
+            <span class="font-bold text-slate-700 text-[11px]">Anos Finais</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded-xl bg-white border border-slate-200">
+            <span class="w-3 h-3 rounded-full bg-purple-600 shrink-0"></span>
+            <span class="font-bold text-slate-700 text-[11px]">Ensino Médio</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Espaço Selecionado / Orientação ao Toque -->
+      <div class="p-4 flex-1 flex flex-col justify-center">
+        <div id="interactive-focus-box" class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center transition-all">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl mb-3 shadow-sm">
+            <i class="ph-bold ph-hand-pointing"></i>
+          </div>
+          <h5 class="font-fun font-bold text-emerald-950 text-base">Toque nos Espaços</h5>
+          <p class="text-xs text-emerald-800 mt-1 leading-relaxed">
+            Clique em qualquer ambiente da planta para abrir os detalhes ou selecione as abas acima para navegar pelas salas e pelo Ginásio.
+          </p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- RODAPÉ INSTITUCIONAL SESI 2026 -->
+  <footer class="bg-white border-t border-emerald-100 py-3 px-4 text-center text-xs text-slate-500 shrink-0">
+    <strong>SESIverso 2026 — SESI Divinópolis (Escola Cel. Jovelino Rabelo)</strong> | Painel interativo de orientação dos espaços.
+  </footer>
+
+  <!-- CONTROLE DE TROCA DE AMBIENTES E FOCO INTERATIVO -->
+  <script>
+    function setView(viewName) {
+      const views = ['master', 'ginasio', 'bloco-b', 'infantil', 'teatro', 'maker', 'patio'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}-container`);
+        if (el) {
+          if (v === viewName) {
+            el.classList.remove('hidden');
+            el.classList.add('flex');
+          } else {
+            el.classList.add('hidden');
+            el.classList.remove('flex');
+          }
+        }
+      });
+
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        if (tab.dataset.tab === viewName) {
+          tab.className = "nav-tab px-3.5 py-2 rounded-xl font-bold transition flex items-center gap-1.5 bg-emerald-700 text-white shadow-sm";
+        } else {
+          tab.className = "nav-tab px-3.5 py-2 rounded-xl font-semibold transition flex items-center gap-1.5 bg-white text-slate-700 hover:bg-slate-50 border border-slate-200";
+        }
+      });
+    }
+
+    function updateFocus(item, local) {
+      const box = document.getElementById('interactive-focus-box');
+      box.className = "p-5 rounded-2xl bg-white border-2 border-emerald-500 text-center shadow-md";
+      box.innerHTML = `
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl mb-2 shadow">
+          <i class="ph-bold ph-map-pin"></i>
+        </div>
+        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600 block">Espaço Selecionado</span>
+        <h5 class="font-fun font-bold text-slate-900 text-xl mt-0.5">${item}</h5>
+        <div class="mt-3 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
+          <span class="text-[10px] font-extrabold uppercase text-emerald-700 block">Localização Oficial:</span>
+          <p class="text-xs font-black text-emerald-950 mt-0.5">📍 ${local}</p>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
